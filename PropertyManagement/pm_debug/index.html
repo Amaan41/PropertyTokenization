@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PropertyToken DApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">PropertyToken DApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link" id="wallet-status">Not connected</span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light" id="connect-wallet">Connect Wallet</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="alert alert-info" role="alert">
+                    <p><strong>Contract Address:</strong> <span id="contract-address">0xF183a37C121Fb678D81bEC8a715B3E20eFC6f1B1</span></p>
+                    <p><strong>Your Token Balance:</strong> <span id="token-balance">0</span></p>
+                    <p><strong>Contract ETH Balance:</strong> <span id="contract-balance">0</span> ETH</p>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="propertyTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Register Property</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tokenize-tab" data-bs-toggle="tab" data-bs-target="#tokenize" type="button" role="tab">Tokenize Property</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button" role="tab">List Tokens</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="buy-tab" data-bs-toggle="tab" data-bs-target="#buy" type="button" role="tab">Buy Tokens</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="manage-tab" data-bs-toggle="tab" data-bs-target="#manage" type="button" role="tab">Manage Properties</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="agents-tab" data-bs-toggle="tab" data-bs-target="#agents" type="button" role="tab">Manage Agents</button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3" id="propertyTabsContent">
+            <!-- Register Property Tab -->
+            <div class="tab-pane fade show active" id="register" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Register New Property</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="register-property-form">
+                            <div class="mb-3">
+                                <label for="property-address" class="form-label">Property Address</label>
+                                <input type="text" class="form-control" id="property-address" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="property-details" class="form-label">Property Details</label>
+                                <textarea class="form-control" id="property-details" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="property-value" class="form-label">Property Value (in ETH)</label>
+                                <input type="number" class="form-control" id="property-value" step="0.01" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register Property</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tokenize Property Tab -->
+            <div class="tab-pane fade" id="tokenize" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Tokenize Property</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="tokenize-property-form">
+                            <div class="mb-3">
+                                <label for="tokenize-property-id" class="form-label">Property ID</label>
+                                <input type="number" class="form-control" id="tokenize-property-id" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="token-supply" class="form-label">Token Supply (Number of Tokens)</label>
+                                <input type="number" class="form-control" id="token-supply" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="token-price" class="form-label">Token Price (in ETH)</label>
+                                <input type="number" class="form-control" id="token-price" step="0.00001" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Tokenize Property</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List Tokens Tab -->
+            <div class="tab-pane fade" id="list" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>List Tokens For Sale</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="list-tokens-form">
+                            <div class="mb-3">
+                                <label for="list-property-id" class="form-label">Property ID</label>
+                                <input type="number" class="form-control" id="list-property-id" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="list-token-amount" class="form-label">Token Amount</label>
+                                <input type="number" class="form-control" id="list-token-amount" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">List Tokens</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buy Tokens Tab -->
+            <div class="tab-pane fade" id="buy" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Purchase Tokens</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="buy-property-id" class="form-label">Property ID</label>
+                            <input type="number" class="form-control" id="buy-property-id">
+                            <button class="btn btn-sm btn-info mt-2" id="load-property-details">Load Property Details</button>
+                        </div>
+                        
+                        <div id="property-details-container" class="mb-3 d-none">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6>Property Details</h6>
+                                    <p><strong>Address:</strong> <span id="detail-property-address"></span></p>
+                                    <p><strong>Description:</strong> <span id="detail-property-details"></span></p>
+                                    <p><strong>Value:</strong> <span id="detail-property-value"></span> ETH</p>
+                                    <p><strong>Tokenized:</strong> <span id="detail-is-tokenized"></span></p>
+                                    <p><strong>Tokens Issued:</strong> <span id="detail-tokens-issued"></span></p>
+                                    <p><strong>Token Price:</strong> <span id="detail-token-price"></span> ETH</p>
+                                    <p><strong>Available For Sale:</strong> <span id="detail-tokens-for-sale"></span></p>
+                                    <p><strong>Owner:</strong> <span id="detail-owner"></span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="buy-tokens-form">
+                            <div class="mb-3">
+                                <label for="buy-token-amount" class="form-label">Amount of Tokens to Purchase</label>
+                                <input type="number" class="form-control" id="buy-token-amount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="total-eth-cost" class="form-label">Total Cost (ETH)</label>
+                                <input type="text" class="form-control" id="total-eth-cost" readonly>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Purchase Tokens</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Properties Tab -->
+            <div class="tab-pane fade" id="manage" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Your Properties</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <button class="btn btn-info" id="load-my-properties">Load My Properties</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Address</th>
+                                        <th>Value</th>
+                                        <th>Tokenized</th>
+                                        <th>Tokens Available</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="my-properties-table">
+                                    <!-- Properties will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Update Token Price</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="update-price-form">
+                            <div class="mb-3">
+                                <label for="update-property-id" class="form-label">Property ID</label>
+                                <input type="number" class="form-control" id="update-property-id" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new-token-price" class="form-label">New Token Price (in ETH)</label>
+                                <input type="number" class="form-control" id="new-token-price" step="0.00001" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Price</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5>Fund Buybacks</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="fund-buybacks-form">
+                            <div class="mb-3">
+                                <label for="fund-property-id" class="form-label">Property ID</label>
+                                <input type="number" class="form-control" id="fund-property-id" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fund-amount" class="form-label">Amount (in ETH)</label>
+                                <input type="number" class="form-control" id="fund-amount" step="0.01" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Fund Buybacks</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Agents Tab -->
+            <div class="tab-pane fade" id="agents" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Authorize/Revoke Agents</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="agent-form">
+                            <div class="mb-3">
+                                <label for="agent-property-id" class="form-label">Property ID</label>
+                                <input type="number" class="form-control" id="agent-property-id" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="agent-address" class="form-label">Agent Address</label>
+                                <input type="text" class="form-control" id="agent-address" required>
+                            </div>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-info me-2" id="check-agent">Check Agent Status</button>
+                                <span id="agent-status-display"></span>
+                            </div>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-success me-2" id="authorize-agent">Authorize Agent</button>
+                                <button type="button" class="btn btn-danger" id="revoke-agent">Revoke Agent</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 bg-dark text-light">
+        <div class="container text-center">
+            <p>PropertyToken DApp &copy; 2025</p>
+        </div>
+    </footer>
+
+    <!-- Transaction Modal -->
+    <div class="modal fade" id="txModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Transaction Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="tx-status" class="text-center">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Processing transaction...</p>
+                        <div id="tx-details" class="mt-3"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <p id="error-message"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+    <script src="js/web3-helper.js"></script>
+    <script src="js/ui-handler.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
